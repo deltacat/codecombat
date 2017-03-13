@@ -5,8 +5,8 @@ SetupAccountPanel = require './SetupAccountPanel'
 TeacherSignupStoreModule = require './TeacherSignupStoreModule'
 
 module.exports = TeacherSignupComponent = Vue.extend
-  name: 'teacher-component'
-  template: require('templates/core/create-account-modal/teacher-component')()
+  name: 'teacher-signup-component'
+  template: require('templates/core/create-account-modal/teacher-signup-component')()
   storeModule: TeacherSignupStoreModule
 
   created: ->

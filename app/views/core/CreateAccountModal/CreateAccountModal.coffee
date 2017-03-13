@@ -110,7 +110,7 @@ module.exports = class CreateAccountModal extends ModalView
         else if @signupState.get('path') is 'teacher'
           store.commit('modal/updateSso', _.pick(@signupState.attributes, 'ssoUsed', 'ssoAttrs'))
           store.commit('modal/updateSignupForm', @signupState.get('signupForm'))
-          @signupState.set { screen: 'teacher-component' }
+          @signupState.set { screen: 'teacher-signup-component' }
         else
           @signupState.set { screen: 'confirmation', accountCreated: true }
 
@@ -125,7 +125,7 @@ module.exports = class CreateAccountModal extends ModalView
         else if @signupState.get('path') is 'teacher'
           store.commit('modal/updateSso', _.pick(@signupState.attributes, 'ssoUsed', 'ssoAttrs'))
           store.commit('modal/updateSignupForm', @signupState.get('signupForm'))
-          @signupState.set { screen: 'teacher-component' }
+          @signupState.set { screen: 'teacher-signup-component' }
         else
           @signupState.set { screen: 'confirmation', accountCreated: true }
         
@@ -150,7 +150,7 @@ module.exports = class CreateAccountModal extends ModalView
     store.registerModule('modal', TeacherSignupStoreModule)
 
   afterRender: ->
-    target = @$el.find('#teacher-component')
+    target = @$el.find('#teacher-signup-component')
     return unless target[0]
     if @teacherSignupComponent
       target.replaceWith(@teacherSignupComponent.$el)
