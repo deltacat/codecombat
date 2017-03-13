@@ -160,7 +160,10 @@ module.exports = class CreateAccountModal extends ModalView
         store
       })
       @teacherSignupComponent.$on 'back', =>
-        @signupState.set('screen', 'basic-info')
+        if @signupState.get('ssoUsed')
+          @signupState.set('screen', 'sso-confirm')
+        else
+          @signupState.set('screen', 'basic-info')
       
   destroy: ->
     if @teacherSignupComponent
