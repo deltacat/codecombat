@@ -21,14 +21,21 @@ DemographicsPanel = Vue.extend
       return @educationLevel.length or @otherEducationLevel
   methods:
     clickContinue: ->
-      attrs = _.pick(@, 'numStudents', 'numStudentsTotal', 'educationLevelComplete')
-      unless _.all(attrs)
+      requiredAttrs = _.pick(@, 'numStudents', 'numStudentsTotal', 'educationLevelComplete')
+      unless _.all(requiredAttrs)
         @showRequired = true
         return
+      @commitValues()
+      @$emit('continue')
+
+    commitValues: ->
       attrs = _.pick(@, 'numStudents', 'numStudentsTotal', 'notes', 'referrer', 'educationLevel', 'otherEducationLevel', 'otherEducationLevelExplanation')
       @$store.commit('modal/updateTrialRequestProperties', attrs)
-      @$emit('continue')
-    clickBack: -> @$emit('back')
+
+    clickBack: ->
+      @commitValues()
+      @$emit('back')
+
   mounted: ->
     @$refs.focus.focus()
 
