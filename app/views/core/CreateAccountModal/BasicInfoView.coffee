@@ -161,7 +161,10 @@ module.exports = class BasicInfoView extends CocoView
       email: User.schema.properties.email
       name: User.schema.properties.name
       password: User.schema.properties.password
-    required: ['name', 'password'].concat (if @signupState.get('path') in ['student','teacher'] then ['firstName', 'lastName'] else ['email'])
+    required: switch @signupState.get('path')
+      when 'student' then ['name', 'password', 'firstName', 'lastName']
+      when 'teacher' then ['name', 'password', 'email', 'firstName', 'lastName']
+      else ['name', 'password', 'email']
   
   onClickBackButton: -> @trigger 'nav-back'
   

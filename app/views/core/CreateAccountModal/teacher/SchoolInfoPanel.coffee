@@ -69,8 +69,8 @@ SchoolInfoPanel = Vue.extend
       @$store.commit('modal/updateTrialRequestProperties', attrs)
 
     clickContinue: ->
-      attrs = _.pick(@, 'organization', 'district', 'city', 'state', 'country')
-      unless _.all(attrs)
+      requiredAttrs = _.pick(@, 'district', 'city', 'state', 'country')
+      unless _.all(requiredAttrs)
         @showRequired = true
         return
       @commitValues()
