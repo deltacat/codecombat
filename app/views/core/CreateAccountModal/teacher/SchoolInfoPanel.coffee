@@ -64,9 +64,6 @@ SchoolInfoPanel = Vue.extend
     
     commitValues: ->
       attrs = _.pick(@, 'organization', 'district', 'city', 'state', 'country')
-      unless _.all(attrs)
-        @showRequired = true
-        return
       for key in SCHOOL_NCES_KEYS
         ncesKey = 'nces_'+key
         attrs[ncesKey] = @[ncesKey]
@@ -74,6 +71,10 @@ SchoolInfoPanel = Vue.extend
       @$store.commit('modal/updateTrialRequestProperties', attrs)
 
     clickContinue: ->
+      attrs = _.pick(@, 'organization', 'district', 'city', 'state', 'country')
+      unless _.all(attrs)
+        @showRequired = true
+        return
       @commitValues()
       @$emit('continue')
 

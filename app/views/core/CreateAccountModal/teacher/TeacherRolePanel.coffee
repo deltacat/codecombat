@@ -19,6 +19,10 @@ TeacherRolePanel = Vue.extend
   }
   methods:
     clickContinue: ->
+      attrs = _.pick(@, 'phoneNumber', 'role', 'purchaserRole')
+      unless _.all(attrs) and @validPhoneNumber
+        @showRequired = true
+        return
       @commitValues()
       @$emit('continue')
       
@@ -28,9 +32,6 @@ TeacherRolePanel = Vue.extend
 
     commitValues: ->
       attrs = _.pick(@, 'phoneNumber', 'role', 'purchaserRole')
-      unless _.all(attrs)
-        @showRequired = true
-        return
       @$store.commit('modal/updateTrialRequestProperties', attrs)
 
   mounted: ->
