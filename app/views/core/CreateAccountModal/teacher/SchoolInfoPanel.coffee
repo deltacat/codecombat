@@ -11,24 +11,42 @@ SchoolInfoPanel = Vue.extend
   data: ->
     # TODO: Store ncesData in just the store?
     ncesData = _.zipObject(['nces_'+key, ''] for key in SCHOOL_NCES_KEYS)
-    formData = _.pick(@$store.state.modal.trialRequestProperties, [
-      'organization'
-      'district'
-      'city'
-      'state'
-      'country'
-    ])
-    
+    formData = _.pick(@$store.state.modal.trialRequestProperties,
+      ('nces_'+key for key in SCHOOL_NCES_KEYS).concat [
+        'organization'
+        'district'
+        'city'
+        'state'
+        'country'
+      ])
+
     return _.assign(ncesData, formData, {
       showRequired: false
     })
-  
+
   components:
     'nces-search-input': NcesSearchInput
     
   methods:
     updateValue: (name, value) ->
       @[name] = value
+      # Clear relevant NCES fields if they type a custom value instead of an autocompleted value
+      if name in ['organization', 'district']
+        for key in _.difference(SCHOOL_NCES_KEYS, DISTRICT_NCES_KEYS)
+          @['nces_' + key] = ''
+      if name is 'district'
+        for key in DISTRICT_NCES_KEYS
+          @['nces_' + key] = ''
+        @organization = ''
+    
+    clearDistrictNcesValues: ->
+      for key in DISTRICT_NCES_KEYS
+        @['nces_' + key] = ''
+      @organization = ''
+      
+    clearSchoolNcesValues: ->
+      for key in _.difference(SCHOOL_NCES_KEYS, DISTRICT_NCES_KEYS)
+        @['nces_' + key] = ''
 
     applySuggestion: (displayKey, suggestion) ->
       return unless suggestion
@@ -37,25 +55,30 @@ SchoolInfoPanel = Vue.extend
         @organization = suggestion.name
       else
         @district = suggestion.district
-      @filledSuggestion = true
       @country = 'USA'
       NCES_KEYS = if displayKey is 'name' then SCHOOL_NCES_KEYS else DISTRICT_NCES_KEYS
       for key in _.difference(SCHOOL_NCES_KEYS, NCES_KEYS)
-        @['nces_'+key] = undefined
+        @['nces_'+key] = ''
       for key in NCES_KEYS
         @['nces_'+key] = suggestion[key]
-
-    clickContinue: ->
+    
+    commitValues: ->
       attrs = _.pick(@, 'organization', 'district', 'city', 'state', 'country')
       unless _.all(attrs)
         @showRequired = true
         return
-      if @filledSuggestion
-        for key in SCHOOL_NCES_KEYS
-          ncesKey = 'nces_'+key
-          attrs[ncesKey] = @[ncesKey] if @[ncesKey]
+      for key in SCHOOL_NCES_KEYS
+        ncesKey = 'nces_'+key
+        attrs[ncesKey] = @[ncesKey]
+        console.log ncesKey, attrs[ncesKey], @[ncesKey]
       @$store.commit('modal/updateTrialRequestProperties', attrs)
+
+    clickContinue: ->
+      @commitValues()
       @$emit('continue')
-    clickBack: -> @$emit('back')
+
+    clickBack: ->
+      @commitValues()
+      @$emit('back')
 
 module.exports = SchoolInfoPanel

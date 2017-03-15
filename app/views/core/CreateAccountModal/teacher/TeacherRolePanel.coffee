@@ -12,19 +12,27 @@ TeacherRolePanel = Vue.extend
     return _.assign(formData, {
       showRequired: false
     })
+
   computed: {
     validPhoneNumber: ->
       return forms.validatePhoneNumber(@phoneNumber)
   }
   methods:
     clickContinue: ->
+      @commitValues()
+      @$emit('continue')
+      
+    clickBack: ->
+      @commitValues()
+      @$emit('back')
+
+    commitValues: ->
       attrs = _.pick(@, 'phoneNumber', 'role', 'purchaserRole')
       unless _.all(attrs)
         @showRequired = true
         return
       @$store.commit('modal/updateTrialRequestProperties', attrs)
-      @$emit('continue')
-    clickBack: -> @$emit('back')
+
   mounted: ->
     @$refs.focus.focus()
 
