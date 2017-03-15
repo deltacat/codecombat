@@ -13,7 +13,6 @@ NcesSearchInput = Vue.extend
       suggestions: []
       suggestionIndex: 0
       filledSuggestion: ''
-      showRequired: false
       value: @initialValue
     }
 
@@ -27,6 +26,9 @@ NcesSearchInput = Vue.extend
     name:
       type: String
       default: ''
+    showRequired:
+      type: Boolean
+      default: false
 
   methods:
     onInput: (e) ->
