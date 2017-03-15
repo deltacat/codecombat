@@ -1,6 +1,6 @@
 .form-group(v-bind:class="{ 'has-error': showRequired && !value }")
   span.control-label
-    | {{ $t("teachers_quote.organization_label") }}
+    | {{ $t("teachers_quote." + name + "_label") }}
     =" "
     strong(v-if="showRequired && !value") {{ $t("common.required_field") }}
   input.form-control(
