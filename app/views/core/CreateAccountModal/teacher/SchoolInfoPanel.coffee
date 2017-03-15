@@ -37,7 +37,6 @@ SchoolInfoPanel = Vue.extend
       if name is 'district'
         for key in DISTRICT_NCES_KEYS
           @['nces_' + key] = ''
-        @organization = ''
     
     clearDistrictNcesValues: ->
       for key in DISTRICT_NCES_KEYS
@@ -67,7 +66,6 @@ SchoolInfoPanel = Vue.extend
       for key in SCHOOL_NCES_KEYS
         ncesKey = 'nces_'+key
         attrs[ncesKey] = @[ncesKey]
-        console.log ncesKey, attrs[ncesKey], @[ncesKey]
       @$store.commit('modal/updateTrialRequestProperties', attrs)
 
     clickContinue: ->
