@@ -4,6 +4,9 @@ Classroom = require 'models/Classroom'
 forms = require 'core/forms'
 factories = require 'test/app/factories'
 
+SchoolInfoPanel = require 'views/core/CreateAccountModal/teacher/SchoolInfoPanel'
+TeacherSignupStoreModule = require 'views/core/CreateAccountModal/teacher/TeacherSignupStoreModule'
+
 # TODO: Figure out why these tests break Travis. Suspect it has to do with the
 # asynchronous, Promise system. On the browser, these work, but in Travis, they
 # sometimes fail, so it's some sort of race condition.
@@ -12,7 +15,8 @@ responses = {
   signupSuccess: { status: 200, responseText: JSON.stringify({ email: 'some@email.com' })}
 }
 
-xdescribe 'CreateAccountModal', ->
+
+describe 'CreateAccountModal', ->
   
   modal = null
   
@@ -42,10 +46,9 @@ xdescribe 'CreateAccountModal', ->
         spyOn application.router, 'navigate'
         modal.$('.teacher-path-button').click()
         
-      it 'navigates the user to /teachers/signup', ->
-        expect(application.router.navigate).toHaveBeenCalled()
-        args = application.router.navigate.calls.argsFor(0)
-        expect(args[0]).toBe('/teachers/signup')
+      it 'switches to BasicInfoView and sets "path" to "teacher"', ->
+        expect(modal.signupState.get('path')).toBe('teacher')
+        expect(modal.signupState.get('screen')).toBe('basic-info')
         
     describe 'click sign up as STUDENT button', ->
       beforeEach ->
@@ -424,3 +427,71 @@ xdescribe 'CreateAccountModal', ->
       coppaDenyView = modal.subviews.coppa_deny_view
 
     it '(for demo testing)', ->
+
+  describe 'TeacherSignupComponent', ->
+    beforeEach ->
+      @store = new Vuex.Store()
+      @store.registerModule('modal', TeacherSignupStoreModule)
+
+    describe 'SchoolInfoPanel', ->
+      describe 'updateValue', ->
+        beforeEach ->
+          @schoolInfoPanel = new SchoolInfoPanel({
+            store: @store
+            el: document.createElement('div')
+            data:
+              organization: 'suggested school'
+              district: 'suggested district'
+              nces_id: 'school NCES id'
+              nces_district_id: 'district NCES id'
+              nces_phone: 'school NCES phone'
+          })
+          null
+
+        describe 'when you type into the school field', ->
+          it 'clears the school NCES info', ->
+            expect(@schoolInfoPanel.organization).not.toBe('')
+            expect(@schoolInfoPanel.district).not.toBe('')
+            expect(@schoolInfoPanel.nces_id).not.toBe('')
+            expect(@schoolInfoPanel.nces_phone).not.toBe('')
+            expect(@schoolInfoPanel.nces_district_id).not.toBe('')
+            @schoolInfoPanel.updateValue('organization', 'homeschool')
+            expect(@schoolInfoPanel.organization).toBe('homeschool')
+            expect(@schoolInfoPanel.district).toBe('suggested district')
+            expect(@schoolInfoPanel.nces_id).toBe('')
+            expect(@schoolInfoPanel.nces_phone).toBe('')
+            expect(@schoolInfoPanel.nces_district_id).toBe('district NCES id')
+
+        describe 'when you type into the district field', ->
+          it 'clears the school and district NCES info', ->
+            expect(@schoolInfoPanel.organization).not.toBe('')
+            expect(@schoolInfoPanel.district).not.toBe('')
+            expect(@schoolInfoPanel.nces_id).not.toBe('')
+            expect(@schoolInfoPanel.nces_phone).not.toBe('')
+            expect(@schoolInfoPanel.nces_district_id).not.toBe('')
+            @schoolInfoPanel.updateValue('district', 'homedistrict')
+            expect(@schoolInfoPanel.organization).toBe('suggested school')
+            expect(@schoolInfoPanel.district).toBe('homedistrict')
+            expect(@schoolInfoPanel.nces_id).toBe('')
+            expect(@schoolInfoPanel.nces_phone).toBe('')
+            expect(@schoolInfoPanel.nces_district_id).toBe('')
+
+      describe 'clearDistrictNcesValues', ->
+
+      describe 'clearSchoolNcesValues', ->
+
+      describe 'applySuggestion', ->
+
+      describe 'commitValues', ->
+
+      describe 'clickContinue', ->
+
+      describe 'clickBack', ->
+
+    describe 'NcesSearchInput', ->
+
+    describe 'DemographicsPanel', ->
+
+    describe 'SetupAccountPanel', ->
+
+    describe 'TeacherRolePanel', ->
