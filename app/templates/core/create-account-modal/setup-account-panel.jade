@@ -12,7 +12,16 @@
       ol
         li {{ $t("signup.teacher_list_create_class") }}
         li {{ $t("signup.teacher_list_add_students") }}
-        li {{ $t("signup.teacher_list_resource_hub") }}
+        li
+          span {{ $t("signup.teacher_list_resource_hub_1") }}
+          =" "
+          a(href="/teachers/courses") {{ $t("signup.teacher_list_resource_hub_2") }}
+          =" "
+          span {{ $t("signup.teacher_list_resource_hub_3") }}
+          =" "
+          a(href="/teachers/resources") {{ $t("signup.teacher_list_resource_hub_4") }}
+          =" "
+          span {{ $t("signup.teacher_list_resource_hub_5") }}
       span(v-html="$t('signup.teacher_additional_questions', {supportEmail})")
 
   .history-nav-buttons

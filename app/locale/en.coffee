@@ -293,7 +293,11 @@
     teacher_students_can_start_now: "Your students will be able to start playing the first course, Introduction to Computer Science, immediately."
     teacher_list_create_class: "On the next screen you will be able to create a new class."
     teacher_list_add_students: "Add students to the class by clicking the View Class link, then sending your students the Class Code or URL. You can also invite them via email if they have email addresses."
-    teacher_list_resource_hub: "Check out the Resource Hub tab for solutions to every level, curriculum guides and more!"
+    teacher_list_resource_hub_1: "Check out the"
+    teacher_list_resource_hub_2: "Course Guides"
+    teacher_list_resource_hub_3: "for solutions to every level, and the"
+    teacher_list_resource_hub_4: "Resource Hub"
+    teacher_list_resource_hub_5: "for curriculum guides, activities, and more!"
     teacher_additional_questions: "That’s it! If you need additional help or have questions, reach out to __supportEmail__."
 
   recover:
