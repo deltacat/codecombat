@@ -29,6 +29,8 @@ NcesSearchInput = Vue.extend
     showRequired:
       type: Boolean
       default: false
+    label:
+      type: String
 
   methods:
     onInput: (e) ->

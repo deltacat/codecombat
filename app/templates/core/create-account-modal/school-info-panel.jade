@@ -3,6 +3,7 @@ div.school-info-panel
     .row.m-y-2
       .col-xs-offset-2.col-xs-8
         nces-search-input(
+          v-bind:label='$t("teachers_quote.school_name")'
           v-on:navSearchChoose="applySuggestion"
           name="organization"
           displayKey="name"
@@ -13,6 +14,7 @@ div.school-info-panel
     .row.m-y-2
       .col-xs-offset-2.col-xs-4
         nces-search-input(
+          v-bind:label='$t("teachers_quote.district_name")'
           v-on:navSearchChoose="applySuggestion"
           name="district"
           displayKey="district"
@@ -48,5 +50,5 @@ div.school-info-panel
   
   // In reverse order for tabbing purposes
   .history-nav-buttons
-    button#create-account-btn.next-button.btn.btn-lg.btn-navy(v-on:click="clickContinue") {{ $t("common.continue") }}
+    button#create-account-btn.next-button.btn.btn-lg.btn-navy(v-on:click="clickContinue") {{ $t("common.next") }}
     button.back-button.btn.btn-lg.btn-navy-alt(type='button', v-on:click="clickBack") {{ $t("common.back") }}
