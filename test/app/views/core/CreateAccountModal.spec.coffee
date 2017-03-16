@@ -428,6 +428,7 @@ xdescribe 'CreateAccountModal', ->
 
     it '(for demo testing)', ->
 
+describe 'CreateAccountModal Vue Components', ->
   describe 'TeacherSignupComponent', ->
     beforeEach ->
       @store = new Vuex.Store()
