@@ -50,12 +50,10 @@ SchoolInfoPanel = Vue.extend
       _.assign(@, _.pick(suggestion, 'district', 'city', 'state'))
       if displayKey is 'name'
         @organization = suggestion.name
-      else
-        @district = suggestion.district
       @country = 'USA'
+      @clearSchoolNcesValues()
+      @clearDistrictNcesValues()
       NCES_KEYS = if displayKey is 'name' then SCHOOL_NCES_KEYS else DISTRICT_NCES_KEYS
-      for key in _.difference(SCHOOL_NCES_KEYS, NCES_KEYS)
-        @['nces_'+key] = ''
       for key in NCES_KEYS
         @['nces_'+key] = suggestion[key]
     
