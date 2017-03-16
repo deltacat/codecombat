@@ -31,17 +31,15 @@ SchoolInfoPanel = Vue.extend
     updateValue: (name, value) ->
       @[name] = value
       # Clear relevant NCES fields if they type a custom value instead of an autocompleted value
-      if name in ['organization', 'district']
-        for key in _.difference(SCHOOL_NCES_KEYS, DISTRICT_NCES_KEYS)
-          @['nces_' + key] = ''
+      if name is 'organization'
+        @clearSchoolNcesValues()
       if name is 'district'
-        for key in DISTRICT_NCES_KEYS
-          @['nces_' + key] = ''
+        @clearSchoolNcesValues()
+        @clearDistrictNcesValues()
     
     clearDistrictNcesValues: ->
       for key in DISTRICT_NCES_KEYS
         @['nces_' + key] = ''
-      @organization = ''
       
     clearSchoolNcesValues: ->
       for key in _.difference(SCHOOL_NCES_KEYS, DISTRICT_NCES_KEYS)
