@@ -532,6 +532,40 @@ describe 'CreateAccountModal', ->
             expect(@schoolInfoPanel.nces_district_id).toBe('suggested nces_district_id 2')
 
       describe 'commitValues', ->
+        beforeEach ->
+          @schoolInfoPanel = new SchoolInfoPanel({
+            store: @store
+            el: document.createElement('div')
+            data:
+              organization: 'some name'
+              district: 'some district'
+              city: 'some city'
+              state: 'some state'
+              country: 'some country'
+              nces_id: 'some nces_id'
+              nces_name: 'some name'
+              nces_students: 'some students'
+              nces_phone: 'some nces_phone'
+              nces_district_id: 'some nces_district_id'
+              nces_district_schools: 'some nces_district_schools'
+              nces_district_students: 'some nces_district_students'
+          })
+
+        it 'Commits all of the important values', ->
+          @schoolInfoPanel.commitValues()
+          expect(@store.state.modal.trialRequestProperties.organization).toBe('some name')
+          expect(@store.state.modal.trialRequestProperties.district).toBe('some district')
+          expect(@store.state.modal.trialRequestProperties.city).toBe('some city')
+          expect(@store.state.modal.trialRequestProperties.state).toBe('some state')
+          expect(@store.state.modal.trialRequestProperties.country).toBe('some country')
+          expect(@store.state.modal.trialRequestProperties.nces_id).toBe('some nces_id')
+          expect(@store.state.modal.trialRequestProperties.nces_name).toBe('some name')
+          expect(@store.state.modal.trialRequestProperties.nces_students).toBe('some students')
+          expect(@store.state.modal.trialRequestProperties.nces_phone).toBe('some nces_phone')
+          expect(@store.state.modal.trialRequestProperties.nces_district_id).toBe('some nces_district_id')
+          expect(@store.state.modal.trialRequestProperties.nces_district_schools).toBe('some nces_district_schools')
+          expect(@store.state.modal.trialRequestProperties.nces_district_students).toBe('some nces_district_students')
+          null
 
       describe 'clickContinue', ->
 
