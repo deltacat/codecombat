@@ -481,6 +481,55 @@ describe 'CreateAccountModal', ->
       describe 'clearSchoolNcesValues', ->
 
       describe 'applySuggestion', ->
+        beforeEach ->
+          @schoolInfoPanel = new SchoolInfoPanel({
+            store: @store
+            el: document.createElement('div')
+            data:
+              organization: 'suggested school'
+              district: 'suggested district'
+              nces_id: 'school NCES id'
+              nces_district_id: 'district NCES id'
+              nces_phone: 'school NCES phone'
+          })
+
+        describe 'when choosing a suggested school', ->
+          it 'sets the school name', ->
+            @schoolInfoPanel.applySuggestion('name', {
+              name: 'suggested school 2'
+              district: 'suggested district 2'
+              city: 'suggested city 2'
+              state: 'suggested state 2'
+              id: 'suggested nces_id 2'
+              district_id: 'suggested nces_district_id 2'
+              phone: 'suggested nces_phone 2'
+            })
+            expect(@schoolInfoPanel.organization).toBe('suggested school 2')
+            expect(@schoolInfoPanel.district).toBe('suggested district 2')
+            expect(@schoolInfoPanel.city).toBe('suggested city 2')
+            expect(@schoolInfoPanel.state).toBe('suggested state 2')
+            expect(@schoolInfoPanel.nces_id).toBe('suggested nces_id 2')
+            expect(@schoolInfoPanel.nces_phone).toBe('suggested nces_phone 2')
+            expect(@schoolInfoPanel.nces_district_id).toBe('suggested nces_district_id 2')
+
+        describe 'when choosing a suggested district', ->
+          it 'sets the district and leaves the school name alone', ->
+            @schoolInfoPanel.applySuggestion('district', {
+              name: 'suggested name 2'
+              district: 'suggested district 2'
+              city: 'suggested city 2'
+              state: 'suggested state 2'
+              id: 'suggested nces_id 2'
+              district_id: 'suggested nces_district_id 2'
+              phone: 'suggested nces_phone'
+            })
+            expect(@schoolInfoPanel.organization).toBe('suggested school')
+            expect(@schoolInfoPanel.district).toBe('suggested district 2')
+            expect(@schoolInfoPanel.city).toBe('suggested city 2')
+            expect(@schoolInfoPanel.state).toBe('suggested state 2')
+            expect(@schoolInfoPanel.nces_id).toBe('')
+            expect(@schoolInfoPanel.nces_phone).toBe('')
+            expect(@schoolInfoPanel.nces_district_id).toBe('suggested nces_district_id 2')
 
       describe 'commitValues', ->
 
