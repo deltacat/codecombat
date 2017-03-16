@@ -84,10 +84,7 @@ module.exports = class HomeView extends RootView
 
   onClickTeacherButton: (e) ->
     window.tracker?.trackEvent $(e.target).data('event-action'), category: 'Homepage', []
-    if me.isTeacher()
-      application.router.navigate('/teachers', { trigger: true })
-    else
-      application.router.navigate('/teachers/signup', { trigger: true })
+    @render?() if document.location.href.search('/home#create-account-teacher') isnt -1
 
   onClickViewProfile: (e) ->
     window.tracker?.trackEvent $(e.target).data('event-action'), category: 'Homepage', []
@@ -115,6 +112,8 @@ module.exports = class HomeView extends RootView
         @openModalView(new CreateAccountModal({startOnPath: 'individual'}))
       if document.location.hash is '#create-account-student'
         @openModalView(new CreateAccountModal({startOnPath: 'student'}))
+      if document.location.hash is '#create-account-teacher'
+        @openModalView(new CreateAccountModal({startOnPath: 'teacher'}))
     super()
 
   destroy: ->
