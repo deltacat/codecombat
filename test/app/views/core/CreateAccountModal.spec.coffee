@@ -428,11 +428,10 @@ xdescribe 'CreateAccountModal', ->
 
     it '(for demo testing)', ->
 
-describe 'CreateAccountModal Vue Components', ->
+xdescribe 'CreateAccountModal Vue Components', ->
   describe 'TeacherSignupComponent', ->
     beforeEach ->
-      @store = new Vuex.Store()
-      @store.registerModule('modal', TeacherSignupStoreModule)
+      @store = {}
 
     describe 'SchoolInfoPanel', ->
       describe 'updateValue', ->
