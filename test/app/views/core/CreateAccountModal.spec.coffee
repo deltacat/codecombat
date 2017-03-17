@@ -428,7 +428,7 @@ xdescribe 'CreateAccountModal', ->
 
     it '(for demo testing)', ->
 
-xdescribe 'CreateAccountModal Vue Components', ->
+describe 'CreateAccountModal Vue Components', ->
   describe 'TeacherSignupComponent', ->
     beforeEach ->
       @store = {}
@@ -436,15 +436,18 @@ xdescribe 'CreateAccountModal Vue Components', ->
     describe 'SchoolInfoPanel', ->
       describe 'updateValue', ->
         beforeEach ->
+          @store = {
+            state:
+              modal:
+                trialRequestProperties:
+                  organization: 'suggested school'
+                  district: 'suggested district'
+                  nces_id: 'school NCES id'
+                  nces_district_id: 'district NCES id'
+                  nces_phone: 'school NCES phone'
+          }
           @schoolInfoPanel = new SchoolInfoPanel({
             store: @store
-            el: document.createElement('div')
-            data:
-              organization: 'suggested school'
-              district: 'suggested district'
-              nces_id: 'school NCES id'
-              nces_district_id: 'district NCES id'
-              nces_phone: 'school NCES phone'
           })
           null
 
@@ -482,15 +485,18 @@ xdescribe 'CreateAccountModal Vue Components', ->
 
       describe 'applySuggestion', ->
         beforeEach ->
+          @store = {
+            state:
+              modal:
+                trialRequestProperties:
+                  organization: 'suggested school'
+                  district: 'suggested district'
+                  nces_id: 'school NCES id'
+                  nces_district_id: 'district NCES id'
+                  nces_phone: 'school NCES phone'
+          }
           @schoolInfoPanel = new SchoolInfoPanel({
             store: @store
-            el: document.createElement('div')
-            data:
-              organization: 'suggested school'
-              district: 'suggested district'
-              nces_id: 'school NCES id'
-              nces_district_id: 'district NCES id'
-              nces_phone: 'school NCES phone'
           })
 
         describe 'when choosing a suggested school', ->
@@ -533,9 +539,14 @@ xdescribe 'CreateAccountModal Vue Components', ->
 
       describe 'commitValues', ->
         beforeEach ->
+          @store = {
+            state:
+              modal:
+                trialRequestProperties: {}
+            commit: jasmine.createSpy()
+          }
           @schoolInfoPanel = new SchoolInfoPanel({
             store: @store
-            el: document.createElement('div')
             data:
               organization: 'some name'
               district: 'some district'
@@ -553,19 +564,20 @@ xdescribe 'CreateAccountModal Vue Components', ->
 
         it 'Commits all of the important values', ->
           @schoolInfoPanel.commitValues()
-          expect(@store.state.modal.trialRequestProperties.organization).toBe('some name')
-          expect(@store.state.modal.trialRequestProperties.district).toBe('some district')
-          expect(@store.state.modal.trialRequestProperties.city).toBe('some city')
-          expect(@store.state.modal.trialRequestProperties.state).toBe('some state')
-          expect(@store.state.modal.trialRequestProperties.country).toBe('some country')
-          expect(@store.state.modal.trialRequestProperties.nces_id).toBe('some nces_id')
-          expect(@store.state.modal.trialRequestProperties.nces_name).toBe('some name')
-          expect(@store.state.modal.trialRequestProperties.nces_students).toBe('some students')
-          expect(@store.state.modal.trialRequestProperties.nces_phone).toBe('some nces_phone')
-          expect(@store.state.modal.trialRequestProperties.nces_district_id).toBe('some nces_district_id')
-          expect(@store.state.modal.trialRequestProperties.nces_district_schools).toBe('some nces_district_schools')
-          expect(@store.state.modal.trialRequestProperties.nces_district_students).toBe('some nces_district_students')
-          null
+          [storeName, attrs] = @store.commit.calls.argsFor(0)
+          expect(storeName).toBe('modal/updateTrialRequestProperties')
+          expect(attrs.organization).toBe('some name')
+          expect(attrs.district).toBe('some district')
+          expect(attrs.city).toBe('some city')
+          expect(attrs.state).toBe('some state')
+          expect(attrs.country).toBe('some country')
+          expect(attrs.nces_id).toBe('some nces_id')
+          expect(attrs.nces_name).toBe('some name')
+          expect(attrs.nces_students).toBe('some students')
+          expect(attrs.nces_phone).toBe('some nces_phone')
+          expect(attrs.nces_district_id).toBe('some nces_district_id')
+          expect(attrs.nces_district_schools).toBe('some nces_district_schools')
+          expect(attrs.nces_district_students).toBe('some nces_district_students')
 
       describe 'clickContinue', ->
     
@@ -616,6 +628,38 @@ describe 'CreateAccountModal Vue Store', ->
     it "uses the form email when SSO isn't used", (done) ->
       TeacherSignupStoreModule.actions.createAccount({@state, @commit, @dispatch, @rootState}).then ->
         expect(api.users.signupWithPassword).toHaveBeenCalled()
+        expect(api.users.signupWithGPlus).not.toHaveBeenCalled()
+        expect(api.users.signupWithFacebook).not.toHaveBeenCalled()
         expect(api.users.signupWithPassword.calls.argsFor(0)?[0]?.email).toBe('form email')
         expect(api.users.signupWithPassword.calls.argsFor(0)?[0]?.name).toBe('form name')
+        done()
+
+    it "uses the SSO email when using GPlus SSO", (done) ->
+      _.assign @state,
+        ssoAttrs:
+          email: 'sso email'
+          gplusID: 'gplus ID'
+        ssoUsed: 'gplus'
+      TeacherSignupStoreModule.actions.createAccount({@state, @commit, @dispatch, @rootState}).then ->
+        expect(api.users.signupWithPassword).not.toHaveBeenCalled()
+        expect(api.users.signupWithGPlus).toHaveBeenCalled()
+        expect(api.users.signupWithFacebook).not.toHaveBeenCalled()
+        expect(api.users.signupWithGPlus.calls.argsFor(0)?[0]?.email).toBe('sso email')
+        expect(api.users.signupWithGPlus.calls.argsFor(0)?[0]?.name).toBe('form name')
+        expect(api.users.signupWithGPlus.calls.argsFor(0)?[0]?.gplusID).toBe('gplus ID')
+        done()
+
+    it "uses the SSO email when using Facebook SSO", (done) ->
+      _.assign @state,
+        ssoAttrs:
+          email: 'sso email'
+          facebookID: 'facebook ID'
+        ssoUsed: 'facebook'
+      TeacherSignupStoreModule.actions.createAccount({@state, @commit, @dispatch, @rootState}).then ->
+        expect(api.users.signupWithPassword).not.toHaveBeenCalled()
+        expect(api.users.signupWithGPlus).not.toHaveBeenCalled()
+        expect(api.users.signupWithFacebook).toHaveBeenCalled()
+        expect(api.users.signupWithFacebook.calls.argsFor(0)?[0]?.email).toBe('sso email')
+        expect(api.users.signupWithFacebook.calls.argsFor(0)?[0]?.name).toBe('form name')
+        expect(api.users.signupWithFacebook.calls.argsFor(0)?[0]?.facebookID).toBe('facebook ID')
         done()
