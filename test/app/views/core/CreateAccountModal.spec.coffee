@@ -569,13 +569,54 @@ describe 'CreateAccountModal Vue Components', ->
           null
 
       describe 'clickContinue', ->
-
+    
       describe 'clickBack', ->
-
+    
     describe 'NcesSearchInput', ->
-
+    
     describe 'DemographicsPanel', ->
-
+    
     describe 'SetupAccountPanel', ->
-
+    
     describe 'TeacherRolePanel', ->
+
+api = require 'core/api'
+describe 'CreateAccountModal Vue Store', ->
+  describe 'actions.createAccount', ->
+    beforeEach ->
+      spyOn(window, 'fetch').and.callFake ->
+        throw "This shouldn't be called!"
+      spyOn(api.users, 'signupWithGPlus').and.returnValue(Promise.resolve())
+      spyOn(api.users, 'signupWithFacebook').and.returnValue(Promise.resolve())
+      spyOn(api.users, 'signupWithPassword').and.returnValue(Promise.resolve())
+      spyOn(api.trialRequests, 'post').and.returnValue(Promise.resolve())
+      @dispatch = jasmine.createSpy()
+      @commit = jasmine.createSpy()
+      @rootState = {
+        me:
+          _id: '12345'
+      }
+      @state = {
+        trialRequestProperties:
+          role: 'teacher'
+          organization: 'some name'
+          district: 'some district'
+          city: 'some city'
+          nces_id: 'some nces_id'
+        signupForm:
+          email: 'form email'
+          name: 'form name'
+          password: 'form password'
+        ssoAttrs:
+          email: ''
+          gplusID: ''
+          facebookID: ''
+        ssoUsed: ''
+      }
+    
+    it "uses the form email when SSO isn't used", (done) ->
+      TeacherSignupStoreModule.actions.createAccount({@state, @commit, @dispatch, @rootState}).then ->
+        expect(api.users.signupWithPassword).toHaveBeenCalled()
+        expect(api.users.signupWithPassword.calls.argsFor(0)?[0]?.email).toBe('form email')
+        expect(api.users.signupWithPassword.calls.argsFor(0)?[0]?.name).toBe('form name')
+        done()
