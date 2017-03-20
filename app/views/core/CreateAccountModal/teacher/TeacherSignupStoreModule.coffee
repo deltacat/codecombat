@@ -23,11 +23,16 @@ module.exports = TeacherSignupStoreModule = {
       otherEducationLevel: false
       otherEducationLevelExplanation: ''
       siteOrigin: 'create teacher'
+      firstName: ''
+      lastName: ''
+      email: ''
     })
     signupForm: {
       name: ''
       email: ''
       password: ''
+      firstName: ''
+      lastName: ''
     }
     ssoAttrs: {
       email: '',
